@@ -5,7 +5,7 @@ import sys
 
 import requests
 import unicodecsv
-from progressbar import *
+from progress.bar import Bar
 from requests.auth import HTTPBasicAuth
 
 import json
@@ -137,9 +137,7 @@ def get_forkers(repo, org_name, repo_name, access_token):
         _bad_response(r)
 
 def get_users_stats(users, access_token):
-    widgets = ['Progress: ', Percentage(), ' ', Bar(marker='*',left='[',right=']'),
-               ' ', ETA(), ' ']
-    progress_bar = ProgressBar(widgets=widgets, maxval=500)
+    progress_bar = Bar('Processing', max=len(users))
     progress_bar.start()
 
     for idx, user_login in enumerate(users):
@@ -158,7 +156,7 @@ def get_users_stats(users, access_token):
         else:
             _bad_response(r)
 
-        progress_bar.update(idx)
+        progress_bar.next()
     progress_bar.finish()
     return users
 
